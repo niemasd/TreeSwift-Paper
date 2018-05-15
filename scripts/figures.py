@@ -18,6 +18,7 @@ import numpy as np
 import seaborn as sns
 sns.set_style("ticks")
 rcParams['font.family'] = 'serif'
+N = [100,1000,10000,100000,1000000]
 T = ['TreeSwift','Bio.Phylo','DendroPy']
 units = {'Time':'s','Memory':'MB'}
 pal = {'TreeSwift':'#0000FF', 'Bio.Phylo':'#00FF00', 'DendroPy':'#FF0000'}
@@ -27,7 +28,7 @@ handles = [Patch(color=pal[t],label=t) for t in T]
 for m in ['Time','Memory']:
     fig = plt.figure()
     for t in T:
-        x = []; y = []; N = [100,1000,10000,100000]
+        x = []; y = []
         for n in N:
             x += [n]*10; y += data[t.lower().replace('.','')][m.lower()][n]
         x = np.array(x); y = np.array(y)
