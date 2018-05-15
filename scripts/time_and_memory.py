@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-IT = 10 # number of iterations in timing process
-
 # get memory usage
 def memory():
     from os import getpid; from psutil import Process
@@ -17,15 +15,14 @@ if argv[1].lower().endswith('.gz'):
 else:
     treestr = open(argv[1]).read().strip()
 m_start = memory(); t_start = time()
-for _ in range(10):
-    if argv[2][0] == 'd':
-        from dendropy import Tree
-        for node in Tree.get(data=treestr, schema='newick').preorder_node_iter():
-            pass
-    else:
-        from treeswift import read_tree_newick
-        for node in read_tree_newick(treestr).traverse_preorder():
-            pass
+if argv[2][0] == 'd':
+    from dendropy import Tree
+    for node in Tree.get(data=treestr, schema='newick').preorder_node_iter():
+        pass
+else:
+    from treeswift import read_tree_newick
+    for node in read_tree_newick(treestr).traverse_preorder():
+        pass
 t_end = time(); m_end = memory()
-print("Time: %f"%((t_end-t_start)/IT))
-print("Memory: %d"%((m_end-m_start)/IT))
+print("Time: %f"%(t_end-t_start))
+print("Memory: %d"%(m_end-m_start))
