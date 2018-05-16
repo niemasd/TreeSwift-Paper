@@ -38,7 +38,7 @@ def distance_matrix(m):
                 if child.branch_length:
                     distmat[lookup[parent], lookup[child]] = child.branch_length
         if not tree.rooted:
-            distmat = distmat + distmat.transpose()
+            distmat += distmat.transpose()
         numpy.matrix(distmat)
         t_end = time()
     else:
@@ -79,6 +79,28 @@ def levelorder(m):
         t_start = time()
         for node in read_tree_newick(treestr).traverse_levelorder():
             pass
+        t_end = time()
+    return t_end-t_start
+
+# MRCA
+def mrca(m):
+    if m == 'dendropy':
+        t_start = time()
+        tree = Tree.get(data=treestr, schema='newick')
+        leaves = {l.taxon for l in tree.leaf_node_iter()}
+        tree.mrca(taxa=leaves)
+        t_end = time()
+    elif m == 'biophylo':
+        t_start = time()
+        tree = Phylo.read(treeio, 'newick')
+        leaves = tree.get_terminals()
+        tree.common_ancestor(leaves)
+        t_end = time()
+    else:
+        t_start = time()
+        tree = read_tree_newick(treestr)
+        leaves = {str(l) for l in tree.traverse_leaves()}
+        tree.mrca(leaves)
         t_end = time()
     return t_end-t_start
 
@@ -158,6 +180,7 @@ TASKS = {
     'distance_matrix':distance_matrix,
     'inorder':inorder,
     'levelorder':levelorder,
+    'mrca':mrca,
     'postorder':postorder,
     'preorder':preorder,
     'rootdistorder':rootdistorder,
