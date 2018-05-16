@@ -23,13 +23,13 @@ pal = {'TreeSwift':'#0000FF', 'Bio.Phylo':'#00FF00', 'DendroPy':'#FF0000'}
 handles = [Patch(color=pal[t],label=t) for t in T]
 task = {
     'distance_matrix': "Distance Matrix",
-    'inorder': "In-Order Traversal",
-    'levelorder': "Level-Order Traversal",
-    'mrca': "Most Recent Common Ancestor",
-    'postorder': "Post-Order Traversal",
-    'preorder': "Pre-Order Traversal",
-    'rootdistorder': "Root-Distance-Order Traversal",
-    "total_branch_length": "Total Branch Length"
+    'inorder': "In-Order",
+    'levelorder': "Level-Order",
+    'mrca': "MRCA",
+    'postorder': "Post-Order",
+    'preorder': "Pre-Order",
+    'rootdistorder': "Root-Distance-Order",
+    "total_branch_length": "Total Length"
 }
 N = None
 for m in data:
