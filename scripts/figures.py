@@ -18,26 +18,44 @@ import numpy as np
 import seaborn as sns
 sns.set_style("ticks")
 rcParams['font.family'] = 'serif'
-N = [100,1000,10000,100000,1000000]
-T = ['TreeSwift','Bio.Phylo','DendroPy']
-units = {'Time':'s','Memory':'MB'}
+T = ['DendroPy','Bio.Phylo','TreeSwift']
 pal = {'TreeSwift':'#0000FF', 'Bio.Phylo':'#00FF00', 'DendroPy':'#FF0000'}
 handles = [Patch(color=pal[t],label=t) for t in T]
+task = {
+    'distance_matrix': "Distance Matrix",
+    'inorder': "In-Order Traversal",
+    'levelorder': "Level-Order Traversal",
+    'mrca': "Most Recent Common Ancestor",
+    'postorder': "Post-Order Traversal",
+    'preorder': "Pre-Order Traversal",
+    'rootdistorder': "Root-Distance-Order Traversal",
+    "total_branch_length": "Total Branch Length"
+}
+N = None
+for m in data:
+    if N is None or len(data[m]) > len(N):
+        N = sorted(data[m].keys())
 
 # create figures
-for m in ['Time','Memory']:
+for m in sorted(data.keys()):
     fig = plt.figure()
     for t in T:
         x = []; y = []
         for n in N:
-            x += [n]*10; y += data[t.lower().replace('.','')][m.lower()][n]
-        x = np.array(x); y = np.array(y)
-        if m == 'Memory':
-            y /= (1024*1024)
-        sns.pointplot(x=x, y=y, color=pal[t])
-        sns.plt.title("%s vs. Number of Leaves"%m,fontsize=18,y=1.02)
-        sns.plt.xlabel("Number of Leaves")
-        sns.plt.ylabel("%s (%s)"%(m,units[m]))
-        legend = plt.legend(handles=handles,bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., frameon=True)
+            if n not in data[m]:
+                continue
+            if t.lower().replace('.','') in data[m][n]:
+                x += [n]*10
+                y += data[m][n][t.lower().replace('.','')]
+            else:
+                continue
+        if len(x) != 0:
+            x = np.array(x); y = np.array(y)
+            sns.pointplot(x=x, y=y, color=pal[t])
+    plt.ylim(ymin=0)
+    sns.plt.title("Execution Time vs. Number of Leaves (%s)"%task[m],fontsize=18,y=1.02)
+    sns.plt.xlabel("Number of Leaves")
+    sns.plt.ylabel("Execution Time (seconds)")
+    legend = plt.legend(handles=handles,bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., frameon=True)
     plt.show()
-    fig.savefig('%s_vs_n.pdf'%m.lower(), format='pdf', bbox_inches='tight')
+    fig.savefig('%s.pdf'%m.lower(), format='pdf', bbox_inches='tight')
