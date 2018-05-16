@@ -120,6 +120,24 @@ def preorder(m):
         t_end = time()
     return t_end-t_start
 
+# root distance order traversal
+def rootdistorder(m):
+    if m == 'dendropy':
+        t_start = time()
+        tree = Tree.get(data=treestr, schema='newick')
+        tree.calc_node_ages(is_force_max_age=True)
+        for node in tree.ageorder_node_iter(descending=True):
+            pass
+        t_end = time()
+    elif m == 'biophylo':
+        raise RuntimeError("Bio.Phylo does not have this function")
+    else:
+        t_start = time()
+        for node in read_tree_newick(treestr).traverse_rootdistorder():
+            pass
+        t_end = time()
+    return t_end-t_start
+
 # total branch length
 def total_branch_length(m):
     if m == 'dendropy':
@@ -142,6 +160,7 @@ TASKS = {
     'levelorder':levelorder,
     'postorder':postorder,
     'preorder':preorder,
+    'rootdistorder':rootdistorder,
     'total_branch_length':total_branch_length,
 }
 
