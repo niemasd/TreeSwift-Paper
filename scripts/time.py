@@ -4,6 +4,11 @@ from dendropy import Tree
 from treeswift import read_tree_newick
 import numpy
 
+# get memory usage
+def memory():
+    from os import getpid; from psutil import Process
+    return Process(getpid()).memory_info().rss
+
 # main code
 from io import StringIO
 from sys import argv
@@ -176,10 +181,28 @@ def total_branch_length(m):
         t_end = time()
     return t_end-t_start
 
+# memory
+def measure_memory(m):
+    if m == 'dendropy':
+        m_start = memory()
+        t = Tree.get(data=treestr, schema='newick')
+        t.encode_bipartitions()
+        m_end = memory()
+    elif m == 'biophylo':
+        m_start = memory()
+        t = Phylo.read(treeio, 'newick')
+        m_end = memory()
+    else:
+        m_start = memory()
+        t = read_tree_newick(treestr)
+        m_end = memory()
+    return t_end-t_start
+
 TASKS = {
     'distance_matrix':distance_matrix,
     'inorder':inorder,
     'levelorder':levelorder,
+    'memory':measure_memory,
     'mrca':mrca,
     'postorder':postorder,
     'preorder':preorder,
