@@ -196,7 +196,7 @@ def measure_memory(m):
         m_start = memory()
         t = read_tree_newick(treestr)
         m_end = memory()
-    return t_end-t_start
+    return m_end-m_start
 
 TASKS = {
     'distance_matrix':distance_matrix,
