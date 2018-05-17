@@ -19,7 +19,7 @@ import seaborn as sns
 sns.set_style("ticks")
 rcParams['font.family'] = 'serif'
 T = ['DendroPy','Bio.Phylo','TreeSwift']
-pal = {'TreeSwift':'#0000FF', 'Bio.Phylo':'#00FF00', 'DendroPy':'#FF0000'}
+pal = {'TreeSwift':'#b2df8a', 'Bio.Phylo':'#a6cee3', 'DendroPy':'#1f78b4'}
 handles = [Patch(color=pal[t],label=t) for t in T]
 task = {
     'distance_matrix': "Distance Matrix",
