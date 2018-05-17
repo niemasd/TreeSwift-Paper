@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+MEMORY_DEN = 1024*1024
+
 # load data
 from pickle import load
 from sys import argv
@@ -51,11 +53,19 @@ for m in sorted(data.keys()):
                 continue
         if len(x) != 0:
             x = np.array(x); y = np.array(y)
+            if m == 'memory':
+                y = y/float(MEMORY_DEN)
             sns.pointplot(x=x, y=y, color=pal[t])
     plt.ylim(ymin=0)
-    sns.plt.title("Execution Time vs. Number of Leaves (%s)"%task[m],fontsize=18,y=1.02)
+    if m == 'memory':
+        sns.plt.title("Memory Usage vs. Number of Leaves",fontsize=18,y=1.02)
+    else:
+        sns.plt.title("Execution Time vs. Number of Leaves (%s)"%task[m],fontsize=18,y=1.02)
     sns.plt.xlabel("Number of Leaves")
-    sns.plt.ylabel("Execution Time (seconds)")
+    if m == 'memory':
+        sns.plt.ylabel("Memory Usage (MB)")
+    else:
+        sns.plt.ylabel("Execution Time (seconds)")
     legend = plt.legend(handles=handles,bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., frameon=True)
     plt.show()
     fig.savefig('%s.pdf'%m.lower(), format='pdf', bbox_inches='tight')
