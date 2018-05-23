@@ -22,7 +22,6 @@ sns.set_style("ticks")
 rcParams['font.family'] = 'serif'
 T = ['DendroPy','Bio.Phylo','TreeSwift']
 pal = {'TreeSwift':'#b2df8a', 'Bio.Phylo':'#a6cee3', 'DendroPy':'#1f78b4'}
-handles = [Patch(color=pal[t],label=t) for t in T]
 task = {
     'distance_matrix': "Distance Matrix",
     'inorder': "In-Order",
@@ -41,6 +40,7 @@ for m in data:
 # create figures
 for m in sorted(data.keys()):
     fig = plt.figure()
+    used = []
     for t in T:
         x = []; y = []
         for n in N:
@@ -56,6 +56,7 @@ for m in sorted(data.keys()):
             if m == 'memory':
                 y = y/float(MEMORY_DEN)
             sns.pointplot(x=x, y=y, color=pal[t])
+            used.append(t)
     plt.ylim(ymin=0)
     if m == 'memory':
         sns.plt.title("Memory Usage vs. Number of Leaves",fontsize=18,y=1.02)
@@ -68,6 +69,7 @@ for m in sorted(data.keys()):
         sns.plt.ylabel("Memory Usage (MB)")
     else:
         sns.plt.ylabel("Execution Time (seconds)")
+    handles = [Patch(color=pal[t],label=t) for t in used]
     legend = plt.legend(handles=handles,bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., frameon=True)
     plt.show()
     fig.savefig('%s.pdf'%m.lower(), format='pdf', bbox_inches='tight')
