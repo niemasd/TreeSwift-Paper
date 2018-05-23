@@ -138,6 +138,12 @@ def mrca(m):
         leaves = {str(l) for l in tree.traverse_leaves()}
         tree.mrca(leaves)
         t_end = time()
+    elif m == 'ete3':
+        t_start = time()
+        tree = Tree(treestr,format=1)
+        leaves = tree.get_leaf_names()
+        tree.get_common_ancestor(leaves)
+        t_end = time()
     else:
         assert False, "Invalid tool: %s"%m
     return t_end-t_start
