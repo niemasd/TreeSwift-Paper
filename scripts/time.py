@@ -262,6 +262,10 @@ def measure_memory(m):
         m_start = memory()
         t = read_tree_newick(treestr)
         m_end = memory()
+    elif m == 'ete3':
+        m_start = memory()
+        t = Tree(treestr,format=1)
+        m_end = memory()
     else:
         assert False, "Invalid tool: %s"%m
     return m_end-m_start
