@@ -243,6 +243,12 @@ def total_branch_length(m):
         t_start = time()
         read_tree_newick(treestr).edge_length_sum()
         t_end = time()
+    elif m == 'ete3':
+        t_start = time()
+        total = 0.
+        for node in Tree(treestr,format=1).traverse(strategy='preorder'):
+            total += node.dist
+        t_end = time()
     else:
         assert False, "Invalid tool: %s"%m
     return t_end-t_start
