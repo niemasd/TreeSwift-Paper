@@ -93,6 +93,8 @@ def inorder(m):
         for node in read_tree_newick(treestr).traverse_inorder():
             pass
         t_end = time()
+    elif m == 'ete3':
+        raise RuntimeError("ETE Toolkit does not have this function")
     else:
         assert False, "Invalid tool: %s"%m
     return t_end-t_start
@@ -112,6 +114,11 @@ def levelorder(m):
     elif m == 'treeswift':
         t_start = time()
         for node in read_tree_newick(treestr).traverse_levelorder():
+            pass
+        t_end = time()
+    elif m == 'ete3':
+        t_start = time()
+        for node in Tree(treestr,format=1).traverse(strategy='levelorder'):
             pass
         t_end = time()
     else:
@@ -165,6 +172,11 @@ def postorder(m):
         for node in read_tree_newick(treestr).traverse_postorder():
             pass
         t_end = time()
+    elif m == 'ete3':
+        t_start = time()
+        for node in Tree(treestr,format=1).traverse(strategy='postorder'):
+            pass
+        t_end = time()
     else:
         assert False, "Invalid tool: %s"%m
     return t_end-t_start
@@ -184,6 +196,11 @@ def preorder(m):
     elif m == 'treeswift':
         t_start = time()
         for node in read_tree_newick(treestr).traverse_preorder():
+            pass
+        t_end = time()
+    elif m == 'ete3':
+        t_start = time()
+        for node in Tree(treestr,format=1).traverse(strategy='preorder'):
             pass
         t_end = time()
     else:
@@ -206,6 +223,8 @@ def rootdistorder(m):
         for node in read_tree_newick(treestr).traverse_rootdistorder():
             pass
         t_end = time()
+    elif m == 'ete3':
+        raise RuntimeError("ETE Toolkit does not have this function")
     else:
         assert False, "Invalid tool: %s"%m
     return t_end-t_start
