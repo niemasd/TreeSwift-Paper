@@ -2,6 +2,7 @@
 from Bio import Phylo
 from dendropy import Tree
 from ete3 import Tree
+from itertools import combinations
 from treeswift import read_tree_newick
 import numpy
 
@@ -9,6 +10,25 @@ import numpy
 def memory():
     from os import getpid; from psutil import Process
     return Process(getpid()).memory_info().rss
+
+# distance matrix in ETE Toolkit
+# obtained from https://github.com/linsalrob/EdwardsLab/blob/master/trees/tree_to_cophenetic_matrix.py
+def distance_matrix_ete(tree):
+    leaves = tree.get_leaves()
+    paths = {x:set() for x in leaves}
+    for n in leaves:
+        if n.is_root():
+            continue
+        movingnode = n
+        while not movingnode.is_root():
+            paths[n].add(movingnode); movingnode = movingnode.up
+    leaf_distances = {x.name:{} for x in leaves}
+    for (leaf1, leaf2) in combinations(leaves, 2):
+        uniquenodes = paths[leaf1] ^ paths[leaf2]
+        distance = sum(x.dist for x in uniquenodes)
+        leaf_distances[leaf1.name][leaf2.name] = distance
+        leaf_distances[leaf2.name][leaf1.name] = distance
+    return leaf_distances
 
 # main code
 from io import StringIO
@@ -53,11 +73,7 @@ def distance_matrix(m):
         t_end = time()
     elif m == 'ete3':
         t_start = time()
-        t = Tree(treestr,format=1); L = t.get_leaves(); D = {l:{} for l in L}
-        for i in range(len(L)-1):
-            for j in range(i+1,len(L)):
-                d = t.get_distance(L[i],L[j])
-                D[L[i]][L[j]] = d; D[L[j]][L[i]] = d
+        distance_matrix_ete(Tree(treestr,format=1))
         t_end = time()
     else:
         assert False, "Invalid tool: %s"%m
