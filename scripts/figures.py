@@ -20,8 +20,10 @@ import numpy as np
 import seaborn as sns
 sns.set_style("ticks")
 rcParams['font.family'] = 'serif'
-T = ['DendroPy','Bio.Phylo','TreeSwift']
-pal = {'TreeSwift':'#b2df8a', 'Bio.Phylo':'#a6cee3', 'DendroPy':'#1f78b4'}
+T = ['DendroPy','Bio.Phylo','ETE Toolkit','TreeSwift']
+name_to_key = {'DendroPy':'dendropy', 'Bio.Phylo':'biophylo', 'TreeSwift':'treeswift', 'ETE Toolkit':'ete3'}
+pal = {'TreeSwift':'#20641c', 'Bio.Phylo':'#6caed1', 'DendroPy':'#2286ca', 'ETE Toolkit':'#bfe49e'}
+linestyle = {'TreeSwift':'-', 'DendroPy':':', 'Bio.Phylo':'--', 'ETE Toolkit':'-.'}
 task = {
     'distance_matrix': "Distance Matrix",
     'inorder': "In-Order",
@@ -46,16 +48,16 @@ for m in sorted(data.keys()):
         for n in N:
             if n not in data[m]:
                 continue
-            if t.lower().replace('.','') in data[m][n]:
+            if name_to_key[t] in data[m][n]:
                 x += [n]*10
-                y += data[m][n][t.lower().replace('.','')]
+                y += data[m][n][name_to_key[t]]
             else:
                 continue
         if len(x) != 0:
             x = np.array(x); y = np.array(y)
             if m == 'memory':
                 y = y/float(MEMORY_DEN)
-            sns.pointplot(x=x, y=y, color=pal[t])
+            sns.pointplot(x=x, y=y, color=pal[t], linestyles=linestyle[t])
             used.append(t)
     plt.ylim(ymin=0)
     if m == 'memory':
