@@ -59,8 +59,10 @@ for m in sorted(data.keys()):
     plt.ylim(ymin=0)
     if m == 'memory':
         sns.plt.title("Memory Usage vs. Number of Leaves",fontsize=18,y=1.02)
+    elif m == 'rootdistorder':
+        sns.plt.title("Execution Time vs. Number of Leaves (%s)"%task[m],fontsize=14,y=1.02)
     else:
-        sns.plt.title("Execution Time vs. Number of Leaves (%s)"%task[m],fontsize=18,y=1.02)
+        sns.plt.title("Execution Time vs. Number of Leaves (%s)"%task[m],fontsize=16,y=1.02)
     sns.plt.xlabel("Number of Leaves")
     if m == 'memory':
         sns.plt.ylabel("Memory Usage (MB)")

@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from Bio import Phylo
 from dendropy import Tree
+from ete3 import Tree
 from treeswift import read_tree_newick
 import numpy
 
@@ -13,8 +14,8 @@ def memory():
 from io import StringIO
 from sys import argv
 from time import time
-if len(argv) != 4 or argv[2] not in {'treeswift','dendropy','biophylo'}:
-    print("USAGE: %s <tree_file> <treeswift_or_dendropy_or_biophylo> <task>"%argv[0]); exit(1)
+if len(argv) != 4 or argv[2] not in {'treeswift','dendropy','biophylo','ete3'}:
+    print("USAGE: %s <tree_file> <treeswift_or_dendropy_or_biophylo_or_ete3> <task>"%argv[0]); exit(1)
 if argv[1].lower().endswith('.gz'):
     from gzip import open as gopen
     treestr = gopen(argv[1]).read().decode().strip()
@@ -46,10 +47,20 @@ def distance_matrix(m):
             distmat += distmat.transpose()
         numpy.matrix(distmat)
         t_end = time()
-    else:
+    elif m == 'treeswift':
         t_start = time()
         read_tree_newick(treestr).distance_matrix()
         t_end = time()
+    elif m == 'ete3':
+        t_start = time()
+        t = Tree(treestr,format=1); L = t.get_leaves(); D = {l:{} for l in L}
+        for i in range(len(L)-1):
+            for j in range(i+1,len(L)):
+                d = t.get_distance(L[i],L[j])
+                D[L[i]][L[j]] = d; D[L[j]][L[i]] = d
+        t_end = time()
+    else:
+        assert False, "Invalid tool: %s"%m
     return t_end-t_start
 
 # inorder traversal
@@ -61,11 +72,13 @@ def inorder(m):
         t_end = time()
     elif m == 'biophylo':
         raise RuntimeError("Bio.Phylo does not have this function")
-    else:
+    elif m == 'treeswift':
         t_start = time()
         for node in read_tree_newick(treestr).traverse_inorder():
             pass
         t_end = time()
+    else:
+        assert False, "Invalid tool: %s"%m
     return t_end-t_start
 
 # level-order traversal
@@ -80,11 +93,13 @@ def levelorder(m):
         for node in Phylo.read(treeio, 'newick').find_clades(order='level'):
             pass
         t_end = time()
-    else:
+    elif m == 'treeswift':
         t_start = time()
         for node in read_tree_newick(treestr).traverse_levelorder():
             pass
         t_end = time()
+    else:
+        assert False, "Invalid tool: %s"%m
     return t_end-t_start
 
 # MRCA
@@ -101,12 +116,14 @@ def mrca(m):
         leaves = tree.get_terminals()
         tree.common_ancestor(leaves)
         t_end = time()
-    else:
+    elif m == 'treeswift':
         t_start = time()
         tree = read_tree_newick(treestr)
         leaves = {str(l) for l in tree.traverse_leaves()}
         tree.mrca(leaves)
         t_end = time()
+    else:
+        assert False, "Invalid tool: %s"%m
     return t_end-t_start
 
 # postorder traversal
@@ -121,11 +138,13 @@ def postorder(m):
         for node in Phylo.read(treeio, 'newick').find_clades(order='postorder'):
             pass
         t_end = time()
-    else:
+    elif m == 'treeswift':
         t_start = time()
         for node in read_tree_newick(treestr).traverse_postorder():
             pass
         t_end = time()
+    else:
+        assert False, "Invalid tool: %s"%m
     return t_end-t_start
 
 # preorder traversal
@@ -140,11 +159,13 @@ def preorder(m):
         for node in Phylo.read(treeio, 'newick').find_clades(order='preorder'):
             pass
         t_end = time()
-    else:
+    elif m == 'treeswift':
         t_start = time()
         for node in read_tree_newick(treestr).traverse_preorder():
             pass
         t_end = time()
+    else:
+        assert False, "Invalid tool: %s"%m
     return t_end-t_start
 
 # root distance order traversal
@@ -158,11 +179,13 @@ def rootdistorder(m):
         t_end = time()
     elif m == 'biophylo':
         raise RuntimeError("Bio.Phylo does not have this function")
-    else:
+    elif m == 'treeswift':
         t_start = time()
         for node in read_tree_newick(treestr).traverse_rootdistorder():
             pass
         t_end = time()
+    else:
+        assert False, "Invalid tool: %s"%m
     return t_end-t_start
 
 # total branch length
@@ -175,10 +198,12 @@ def total_branch_length(m):
         t_start = time()
         Phylo.read(treeio, 'newick').total_branch_length()
         t_end = time()
-    else:
+    elif m == 'treeswift':
         t_start = time()
         read_tree_newick(treestr).edge_length_sum()
         t_end = time()
+    else:
+        assert False, "Invalid tool: %s"%m
     return t_end-t_start
 
 # memory
@@ -192,10 +217,12 @@ def measure_memory(m):
         m_start = memory()
         t = Phylo.read(treeio, 'newick')
         m_end = memory()
-    else:
+    elif m == 'treeswift':
         m_start = memory()
         t = read_tree_newick(treestr)
         m_end = memory()
+    else:
+        assert False, "Invalid tool: %s"%m
     return m_end-m_start
 
 TASKS = {
