@@ -43,6 +43,32 @@ else:
     treestr = open(argv[1]).read().strip()
 treeio = StringIO(treestr) # for Bio.Phylo
 
+# ladderize
+def ladderize(m):
+    if m == 'dendropy':
+        tree = dendropy.Tree.get(data=treestr, schema='newick')
+        t_start = time()
+        tree.ladderize()
+        t_end = time()
+    elif m == 'biophylo':
+        tree = Phylo.read(treeio, 'newick')
+        t_start = time()
+        tree.ladderize()
+        t_end = time()
+    elif m == 'treeswift':
+        tree = read_tree_newick(treestr)
+        t_start = time()
+        tree.ladderize()
+        t_end = time()
+    elif m == 'ete3':
+        tree = ete3.Tree(treestr,format=1)
+        t_start = time()
+        tree.ladderize()
+        t_end = time()
+    else:
+        assert False, "Invalid tool: %s"%m
+    return t_end-t_start
+
 # distance matrix
 def distance_matrix(m):
     if m == 'dendropy':
@@ -321,6 +347,7 @@ def measure_memory(m):
 TASKS = {
     'distance_matrix':distance_matrix,
     'inorder':inorder,
+    'ladderize':ladderize,
     'levelorder':levelorder,
     'load_tree':load_tree,
     'memory':measure_memory,
