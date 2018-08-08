@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 from Bio import Phylo
-from dendropy import Tree
-from ete3 import Tree
 from itertools import combinations
 from treeswift import read_tree_newick
+import dendropy
+import ete3
 import numpy
 
 # get memory usage
@@ -46,7 +46,7 @@ treeio = StringIO(treestr) # for Bio.Phylo
 # distance matrix
 def distance_matrix(m):
     if m == 'dendropy':
-        tree = Tree.get(data=treestr, schema='newick')
+        tree = dendropy.Tree.get(data=treestr, schema='newick')
         t_start = time()
         tree.phylogenetic_distance_matrix()
         t_end = time()
@@ -74,7 +74,7 @@ def distance_matrix(m):
         tree.distance_matrix()
         t_end = time()
     elif m == 'ete3':
-        tree = Tree(treestr,format=1)
+        tree = ete3.Tree(treestr,format=1)
         t_start = time()
         distance_matrix_ete(tree)
         t_end = time()
@@ -85,7 +85,7 @@ def distance_matrix(m):
 # inorder traversal
 def inorder(m):
     if m == 'dendropy':
-        tree = Tree.get(data=treestr, schema='newick')
+        tree = dendropy.Tree.get(data=treestr, schema='newick')
         t_start = time()
         for node in tree.inorder_node_iter():
             pass
@@ -107,7 +107,7 @@ def inorder(m):
 # level-order traversal
 def levelorder(m):
     if m == 'dendropy':
-        tree = Tree.get(data=treestr, schema='newick')
+        tree = dendropy.Tree.get(data=treestr, schema='newick')
         t_start = time()
         for node in tree.levelorder_node_iter():
             pass
@@ -125,7 +125,7 @@ def levelorder(m):
             pass
         t_end = time()
     elif m == 'ete3':
-        tree = Tree(treestr,format=1)
+        tree = ete3.Tree(treestr,format=1)
         t_start = time()
         for node in tree.traverse(strategy='levelorder'):
             pass
@@ -137,7 +137,7 @@ def levelorder(m):
 # MRCA
 def mrca(m):
     if m == 'dendropy':
-        tree = Tree.get(data=treestr, schema='newick')
+        tree = dendropy.Tree.get(data=treestr, schema='newick')
         t_start = time()
         leaves = {l.taxon for l in tree.leaf_node_iter()}
         tree.mrca(taxa=leaves)
@@ -155,7 +155,7 @@ def mrca(m):
         tree.mrca(leaves)
         t_end = time()
     elif m == 'ete3':
-        tree = Tree(treestr,format=1)
+        tree = ete3.Tree(treestr,format=1)
         t_start = time()
         leaves = tree.get_leaf_names()
         tree.get_common_ancestor(leaves)
@@ -167,7 +167,7 @@ def mrca(m):
 # postorder traversal
 def postorder(m):
     if m == 'dendropy':
-        tree = Tree.get(data=treestr, schema='newick')
+        tree = dendropy.Tree.get(data=treestr, schema='newick')
         t_start = time()
         for node in tree.postorder_node_iter():
             pass
@@ -185,7 +185,7 @@ def postorder(m):
             pass
         t_end = time()
     elif m == 'ete3':
-        tree = Tree(treestr,format=1)
+        tree = ete3.Tree(treestr,format=1)
         t_start = time()
         for node in tree.traverse(strategy='postorder'):
             pass
@@ -197,7 +197,7 @@ def postorder(m):
 # preorder traversal
 def preorder(m):
     if m == 'dendropy':
-        tree = Tree.get(data=treestr, schema='newick')
+        tree = dendropy.Tree.get(data=treestr, schema='newick')
         t_start = time()
         for node in tree.preorder_node_iter():
             pass
@@ -215,7 +215,7 @@ def preorder(m):
             pass
         t_end = time()
     elif m == 'ete3':
-        tree = Tree(treestr,format=1)
+        tree = ete3.Tree(treestr,format=1)
         t_start = time()
         for node in tree.traverse(strategy='preorder'):
             pass
@@ -227,7 +227,7 @@ def preorder(m):
 # root distance order traversal
 def rootdistorder(m):
     if m == 'dendropy':
-        tree = Tree.get(data=treestr, schema='newick')
+        tree = dendropy.Tree.get(data=treestr, schema='newick')
         t_start = time()
         tree.calc_node_ages(is_force_max_age=True)
         for node in tree.ageorder_node_iter(descending=True):
@@ -250,7 +250,7 @@ def rootdistorder(m):
 # total branch length
 def total_branch_length(m):
     if m == 'dendropy':
-        tree = Tree.get(data=treestr, schema='newick')
+        tree = dendropy.Tree.get(data=treestr, schema='newick')
         t_start = time()
         tree.length()
         t_end = time()
@@ -265,9 +265,9 @@ def total_branch_length(m):
         tree.edge_length_sum()
         t_end = time()
     elif m == 'ete3':
-        tree = Tree(treestr,format=1)
+        tree = ete3.Tree(treestr,format=1)
         t_start = time()
-        sum(node.dist for node in Tree(treestr,format=1).traverse(strategy='preorder'))
+        sum(node.dist for node in tree.traverse(strategy='preorder'))
         t_end = time()
     else:
         assert False, "Invalid tool: %s"%m
@@ -277,7 +277,7 @@ def total_branch_length(m):
 def load_tree(m):
     if m == 'dendropy':
         t_start = time()
-        tree = Tree.get(data=treestr, schema='newick')
+        tree = dendropy.Tree.get(data=treestr, schema='newick')
         t_end = time()
     elif m == 'biophylo':
         t_start = time()
@@ -289,7 +289,7 @@ def load_tree(m):
         t_end = time()
     elif m == 'ete3':
         t_start = time()
-        tree = Tree(treestr,format=1)
+        tree = ete3.Tree(treestr,format=1)
         t_end = time()
     else:
         assert False, "Invalid tool: %s"%m
@@ -299,7 +299,7 @@ def load_tree(m):
 def measure_memory(m):
     if m == 'dendropy':
         m_start = memory()
-        t = Tree.get(data=treestr, schema='newick')
+        t = dendropy.Tree.get(data=treestr, schema='newick')
         t.encode_bipartitions()
         m_end = memory()
     elif m == 'biophylo':
@@ -312,7 +312,7 @@ def measure_memory(m):
         m_end = memory()
     elif m == 'ete3':
         m_start = memory()
-        t = Tree(treestr,format=1)
+        t = ete3.Tree(treestr,format=1)
         m_end = memory()
     else:
         assert False, "Invalid tool: %s"%m
