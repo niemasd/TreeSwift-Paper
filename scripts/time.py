@@ -5,6 +5,7 @@ from treeswift import read_tree_newick
 import dendropy
 import ete3
 import numpy
+NA = "NA" # what to print when function is not implemented
 
 # get memory usage
 def memory():
@@ -117,7 +118,7 @@ def inorder(m):
             pass
         t_end = time()
     elif m == 'biophylo':
-        raise RuntimeError("Bio.Phylo does not have this function")
+        return NA
     elif m == 'treeswift':
         tree = read_tree_newick(treestr)
         t_start = time()
@@ -125,7 +126,7 @@ def inorder(m):
             pass
         t_end = time()
     elif m == 'ete3':
-        raise RuntimeError("ETE Toolkit does not have this function")
+        return NA
     else:
         assert False, "Invalid tool: %s"%m
     return t_end-t_start
@@ -260,7 +261,7 @@ def rootdistorder(m):
             pass
         t_end = time()
     elif m == 'biophylo':
-        raise RuntimeError("Bio.Phylo does not have this function")
+        return NA
     elif m == 'treeswift':
         tree = read_tree_newick(treestr)
         t_start = time()
@@ -268,7 +269,7 @@ def rootdistorder(m):
             pass
         t_end = time()
     elif m == 'ete3':
-        raise RuntimeError("ETE Toolkit does not have this function")
+        return NA
     else:
         assert False, "Invalid tool: %s"%m
     return t_end-t_start
