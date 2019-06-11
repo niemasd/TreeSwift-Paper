@@ -76,11 +76,11 @@ for m in sorted(data.keys()):
                 y = y/float(MEMORY_DEN)
             sns.pointplot(x=x, y=y, color=pal[t], linestyles=linestyle[t])
             used.append(t)
-    #plt.yscale('log')
-    if m in meta['ymin']:
-        plt.ylim(ymin=meta['ymin'][m])
-    if m in meta['ymax']:
-        plt.ylim(ymax=meta['ymax'][m])
+    plt.yscale('log')
+    #if m in meta['ymin']:
+    #    plt.ylim(ymin=meta['ymin'][m])
+    #if m in meta['ymax']:
+    #    plt.ylim(ymax=meta['ymax'][m])
     plt.title(meta['name'][m])
     plt.xlabel("Number of Leaves")
     if m == 'memory':
