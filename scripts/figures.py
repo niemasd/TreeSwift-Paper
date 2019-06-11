@@ -38,19 +38,8 @@ meta = {
         'preorder': "Pre-Order Traversal",
         'rootdistorder': "Root-Distance-Order Traversal",
         'total_branch_length': "Total Length"
-    },
-    'ymax': {
-        'distance_matrix': 0.65,
-        'ladderize': 15,
-        'levelorder': 3.5,
-        'load_tree': 70,
-        'memory': 1200,
-        'mrca': 2.8,
-        'postorder': 4,
-        'preorder': 4,
     }
 }
-meta['ymin'] = {m:0 for m in meta['name']}
 N = None
 for m in data:
     if N is None or len(data[m]) > len(N):
@@ -77,10 +66,6 @@ for m in sorted(data.keys()):
             sns.pointplot(x=x, y=y, color=pal[t], linestyles=linestyle[t])
             used.append(t)
     plt.yscale('log')
-    #if m in meta['ymin']:
-    #    plt.ylim(ymin=meta['ymin'][m])
-    #if m in meta['ymax']:
-    #    plt.ylim(ymax=meta['ymax'][m])
     plt.title(meta['name'][m])
     plt.xlabel("Number of Leaves")
     if m == 'memory':
@@ -88,6 +73,6 @@ for m in sorted(data.keys()):
     else:
         plt.ylabel("Execution Time (seconds)")
     handles = [Patch(color=pal[t],label=t) for t in used]
-    legend = plt.legend(handles=handles,bbox_to_anchor=(1.05, 1), loc=2, borderaxespad=0., frameon=True)
+    legend = plt.legend(handles=handles,bbox_to_anchor=(0.005, 0.995), loc=2, borderaxespad=0., frameon=True)
     plt.show()
     fig.savefig('%s.pdf'%m.lower(), format='pdf', bbox_inches='tight')
