@@ -14,7 +14,7 @@ else:
 
 # set up seaborn
 from matplotlib import rcParams
-from matplotlib.patches import Patch
+from matplotlib.lines import Line2D
 import matplotlib.pyplot as plt
 import numpy as np
 import seaborn as sns
@@ -23,7 +23,7 @@ sns.set_style("ticks")
 rcParams['font.family'] = 'serif'
 T = ['DendroPy','Bio.Phylo','ETE Toolkit','TreeSwift']
 name_to_key = {'DendroPy':'dendropy', 'Bio.Phylo':'biophylo', 'TreeSwift':'treeswift', 'ETE Toolkit':'ete3'}
-pal = {'TreeSwift':'#20641c', 'Bio.Phylo':'#6caed1', 'DendroPy':'#2286ca', 'ETE Toolkit':'#bfe49e'}
+pal = {'TreeSwift':'black', 'Bio.Phylo':'red', 'DendroPy':'blue', 'ETE Toolkit':'green'}
 linestyle = {'TreeSwift':'-', 'DendroPy':':', 'Bio.Phylo':'--', 'ETE Toolkit':'-.'}
 meta = {
     'name': {
@@ -72,7 +72,7 @@ for m in sorted(data.keys()):
         plt.ylabel("Memory Usage (MB)")
     else:
         plt.ylabel("Execution Time (seconds)")
-    handles = [Patch(color=pal[t],label=t) for t in used]
+    handles = [Line2D([0],[0],color=pal[t],label=t,linestyle=linestyle[t],linewidth=1.5) for t in used]
     legend = plt.legend(handles=handles,bbox_to_anchor=(0.005, 0.995), loc=2, borderaxespad=0., frameon=True)
     plt.show()
     fig.savefig('%s.pdf'%m.lower(), format='pdf', bbox_inches='tight')
